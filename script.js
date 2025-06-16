@@ -1,89 +1,71 @@
- document.querySelectorAll('.button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      btn.textContent = "Unlocked";
-      btn.disabled = true;
-      btn.style.background = "gray";
-    });
-  });
-
-
-  const radios = document.querySelectorAll('input[name="style"]');
-
-  radios.forEach(radio => {
-    radio.addEventListener('change', () => {
-      localStorage.setItem('stylePreference', radio.value);
-    });
-  });
-
-  // On page load
-  const savedStyle = localStorage.getItem('stylePreference');
-  if (savedStyle) {
-    document.getElementById(savedStyle).checked = true;
-  }
-
-
-
-
-  const current = window.location.pathname.split("/").pop();
-  document.querySelectorAll('.footer a').forEach(link => {
-    if (link.getAttribute('href') === current) {
-      link.classList.add('active');
-    } else {
-      link.classList.remove('active');
-    }
-  });
-
-
-
-
-  const languageSelect = document.getElementById('languageSelect');
-
-  // Save selected language
-  languageSelect.addEventListener('change', () => {
-    const selectedLang = languageSelect.value;
-    localStorage.setItem('appLanguage', selectedLang);
-    alert('Language set to ' + selectedLang);
-    // Reload to apply language across site (optional)
-    // location.reload();
-  });
-
-  // Set dropdown to saved language
-  const savedLang = localStorage.getItem('appLanguage');
-  if (savedLang) {
-    languageSelect.value = savedLang;
-  }
-
-
-
-
+document.addEventListener("DOMContentLoaded", () => {
   const lang = localStorage.getItem('appLanguage') || 'en';
 
   const translations = {
     en: {
       character: 'Character',
-      upgrade: 'Upgrade'
+      upgrade: 'Upgrade',
+      item: 'Item',
+      setting: 'Setting',
+      unlock: 'Unlock',
+      yourPlan: 'Your plan',
+      free: 'FREE',
     },
     hi: {
       character: 'चरित्र',
-      upgrade: 'अपग्रेड करें'
+      upgrade: 'अपग्रेड करें',
+      item: 'आइटम',
+      setting: 'सेटिंग',
+      unlock: 'अनलॉक करें',
+      yourPlan: 'आपकी योजना',
+      free: 'नि:शुल्क',
     },
     jp: {
       character: 'キャラクター',
-      upgrade: 'アップグレード'
+      upgrade: 'アップグレード',
+      item: 'アイテム',
+      setting: '設定',
+      unlock: 'アンロック',
+      yourPlan: 'あなたのプラン',
+      free: '無料',
     }
   };
 
-  // Apply translated text
-  document.querySelector('.title').textContent = translations[lang].character;
-  document.querySelector('.upgrade').textContent = translations[lang].upgrade;
+  const textKeys = {
+    '.title': 'character',
+    '.upgrade': 'upgrade',
+    '.highlight': 'free',
+    '.setting-title': 'setting',
+    '.item-title': 'item',
+    '.plan-label': 'yourPlan',
+    '.unlock-button': 'unlock',
+    '.button-upgrade': 'upgrade',
+  };
 
+  for (let selector in textKeys) {
+    const el = document.querySelector(selector);
+    if (el && translations[lang][textKeys[selector]]) {
+      el.textContent = translations[lang][textKeys[selector]];
+    }
+  }
 
+  // Dropdown handling on setting.html
+  const languageSelect = document.getElementById('languageSelect');
+  if (languageSelect) {
+    languageSelect.value = lang;
+    languageSelect.addEventListener('change', () => {
+      localStorage.setItem('appLanguage', languageSelect.value);
+      location.reload();
+    });
+  }
 
-
-
-
-
-
-
-
-  
+  // Footer navigation active class
+  const page = location.pathname.split("/").pop();
+  document.querySelectorAll('.footer a.circle').forEach(link => {
+    if (link.getAttribute('href') === page) {
+      link.classList.add('active');
+    } else {
+      link.classList.remove('active');
+    }
+  });
+});
