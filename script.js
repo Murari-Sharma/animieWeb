@@ -69,3 +69,41 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const sidebar = document.getElementById("sidebar");
+  const hamburger = document.getElementById("hamburger");
+  const themeToggle = document.getElementById("themeToggle");
+  const themeIcon = document.getElementById("themeIcon");
+
+  // Sidebar toggle
+  hamburger.addEventListener("click", () => {
+    sidebar.classList.toggle("show");
+    sidebar.classList.remove("hidden");
+  });
+
+  // Click outside sidebar to close
+  window.addEventListener("click", (e) => {
+    if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) {
+      sidebar.classList.remove("show");
+    }
+  });
+
+  // Theme toggle
+  const currentTheme = localStorage.getItem("theme") || "dark";
+  if (currentTheme === "light") {
+    document.body.classList.add("light-mode");
+    themeIcon.classList.remove("fa-moon");
+    themeIcon.classList.add("fa-sun");
+  }
+
+  themeToggle.addEventListener("click", () => {
+    document.body.classList.toggle("light-mode");
+    const isLight = document.body.classList.contains("light-mode");
+    themeIcon.classList.toggle("fa-moon", !isLight);
+    themeIcon.classList.toggle("fa-sun", isLight);
+    localStorage.setItem("theme", isLight ? "light" : "dark");
+  });
+});
