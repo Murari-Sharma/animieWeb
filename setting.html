@@ -1,72 +1,71 @@
-<!-- setting.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Setting Page</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-</head>
-<body>
-  <div class="screen">
-    <div class="header">
-      <div class="title">Setting</div>
-      <button class="upgrade">Upgrade</button>
-    </div>
-    <div class="section">
-      <p>Your plan</p>
-      <h2 class="highlight">FREE</h2>
-      <button class="button">UPGRADE</button>
-    </div>
-    <div class="section">
-      <p>Style</p>
-      <div class="style-options">
-        <label><input type="radio" name="style"> Anime</label>
-        <label><input type="radio" name="style"> Realistic</label>
-      </div>
-    </div>
-    <div class="section">
-  <p>Language</p>
-  <select id="languageSelect" class="button">
-    <option value="en">English</option>
-    <option value="hi">Hindi</option>
-    <option value="jp">Japanese</option>
-  </select>
-</div>
-     <div class="footer">
-  <a class="circle active" href="index.html" aria-label="Character">
-    <i class="fa-solid fa-user"></i>
-  </a>
-  <a class="circle" href="item.html" aria-label="Items">
-    <i class="fa-solid fa-shirt"></i>
-  </a>
-  <a class="circle" href="setting.html" aria-label="Settings">
-    <i class="fa-solid fa-gear"></i>
-  </a>
-</div>
-  </div>
-  <script>
-  const languageSelect = document.getElementById('languageSelect');
+document.addEventListener("DOMContentLoaded", () => {
+  const lang = localStorage.getItem('appLanguage') || 'en';
 
-  // Save selected language
-  languageSelect.addEventListener('change', () => {
-    const selectedLang = languageSelect.value;
-    localStorage.setItem('appLanguage', selectedLang);
-    alert('Language set to ' + selectedLang);
-    // Reload to apply language across site (optional)
-    // location.reload();
-  });
+  const translations = {
+    en: {
+      character: 'Character',
+      upgrade: 'Upgrade',
+      item: 'Item',
+      setting: 'Setting',
+      unlock: 'Unlock',
+      yourPlan: 'Your plan',
+      free: 'FREE',
+    },
+    hi: {
+      character: 'चरित्र',
+      upgrade: 'अपग्रेड करें',
+      item: 'आइटम',
+      setting: 'सेटिंग',
+      unlock: 'अनलॉक करें',
+      yourPlan: 'आपकी योजना',
+      free: 'नि:शुल्क',
+    },
+    jp: {
+      character: 'キャラクター',
+      upgrade: 'アップグレード',
+      item: 'アイテム',
+      setting: '設定',
+      unlock: 'アンロック',
+      yourPlan: 'あなたのプラン',
+      free: '無料',
+    }
+  };
 
-  // Set dropdown to saved language
-  const savedLang = localStorage.getItem('appLanguage');
-  if (savedLang) {
-    languageSelect.value = savedLang;
+  const textKeys = {
+    '.title': 'character',
+    '.upgrade': 'upgrade',
+    '.highlight': 'free',
+    '.setting-title': 'setting',
+    '.item-title': 'item',
+    '.plan-label': 'yourPlan',
+    '.unlock-button': 'unlock',
+    '.button-upgrade': 'upgrade',
+  };
+
+  for (let selector in textKeys) {
+    const el = document.querySelector(selector);
+    if (el && translations[lang][textKeys[selector]]) {
+      el.textContent = translations[lang][textKeys[selector]];
+    }
   }
-</script>
 
-</body>
-<script src="script.js"></script>
+  // Dropdown handling on setting.html
+  const languageSelect = document.getElementById('languageSelect');
+  if (languageSelect) {
+    languageSelect.value = lang;
+    languageSelect.addEventListener('change', () => {
+      localStorage.setItem('appLanguage', languageSelect.value);
+      location.reload();
+    });
+  }
 
-
-</html>
+  // Footer navigation active class
+  const page = location.pathname.split("/").pop();
+  document.querySelectorAll('.footer a.circle').forEach(link => {
+    if (link.getAttribute('href') === page) {
+      link.classList.add('active');
+    } else {
+      link.classList.remove('active');
+    }
+  });
+});
